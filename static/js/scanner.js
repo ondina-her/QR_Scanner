@@ -1,6 +1,6 @@
 // scanner.js
 // Scans a QR code from the device camera using the jsQR library,
-// then POSTs the decoded text to the FastAPI backend at /items/.
+// then /items/ the decoded text to the FastAPI backend at /items/.
 
 // Grab the page elements that the JS needs to interact with.
 // These IDs must match the elements in templates/index.html.
@@ -57,27 +57,59 @@ function renderDecoded(decodedText) {
   setVisible(resultLink, false);
 }
 
-// Send the decoded QR text to the FastAPI backend.
-// The backend's Item model expects a JSON body shaped like { "name": "..." }.
+// Save scan event, item, and linking token (three API calls in order).
 async function postResult(decodedText) {
+  const headers = { "Content-Type": "application/json" };
+
   try {
-    const res = await fetch("/items/", {
+    // 1) Scan — record that the camera read this QR
+    const scanRes = await fetch("/scans/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
+      body: JSON.stringify({ text: decodedText, source: "camera" }),
+    });
+    if (!scanRes.ok) {
+      const errorData = await scanRes.json().catch(() => ({}));
+      showError("Scan error: " + (errorData.detail || scanRes.status));
+      return;
+    }
+    const scan = await scanRes.json();
+
+    // 2) Item — save decoded text (same as before)
+    const itemRes = await fetch("/items/", {
+      method: "POST",
+      headers,
       body: JSON.stringify({ name: decodedText }),
     });
+    if (!itemRes.ok) {
+      const errorData = await itemRes.json().catch(() => ({}));
+      showError("Item error: " + (errorData.detail || itemRes.status));
+      return;
+    }
+    const item = await itemRes.json();
 
-    // res.ok is true only for HTTP 2xx. Anything else is a server-side problem
-    // (e.g. 422 validation error or 500 internal error) we want to surface.
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      showError("Backend error: " + (errorData.detail || res.status));
+    // 3) Token — link this scan to this item
+    const tokenRes = await fetch("/tokens/", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        text: decodedText,
+        source: "scanner",
+        date: new Date().toISOString().slice(0, 19),
+        item_id: item.id,
+        scan_id: scan.id,
+      }),
+    });
+    if (!tokenRes.ok) {
+      const errorData = await tokenRes.json().catch(() => ({}));
+      showError("Token error: " + (errorData.detail || tokenRes.status));
+      return;
     }
   } catch (err) {
-    // Thrown when the network call itself fails (server down, DNS, CORS, etc.).
     showError("Failed to connect to server: " + err);
   }
 }
+
 
 // Called repeatedly via requestAnimationFrame while `scanning` is true.
 // Each call grabs the latest video frame and asks jsQR if it sees a QR code.

@@ -1,4 +1,3 @@
-#UI automation (buttons, video feed, result box) and manual QR input (valid, invalid, blank codes)
 #pytest Test/ -v
 
 from selenium import webdriver
@@ -17,7 +16,7 @@ def test_open_app():
 """
 #STQC-6 --Valid QR test
 
-"""
+
 def test_valid_qr_camera():
     # Configure Chrome to auto-allow camera
     chrome_options = webdriver.ChromeOptions()
@@ -48,8 +47,8 @@ def test_valid_qr_camera():
     assert result_box is not None
 
     driver.quit()
-"""
-"""
+
+
 #STQC‑7 Invalid QR test
 def test_invalid_qr_camera():
 
@@ -82,9 +81,9 @@ def test_invalid_qr_camera():
     assert result_box.text == "" or "No result" in driver.page_source
     
     driver.quit()
-"""
 
-"""
+
+
 #STQC‑8 Empty request QR test
 def test_empty_qr_camera():
     chrome_options = webdriver.ChromeOptions()
@@ -115,7 +114,7 @@ def test_empty_qr_camera():
     assert result_box.text == "" or "No result yet" in driver.page_source
 
     driver.quit()
-"""
+
 
 #STQC‑9 UI validation
 def test_ui_validation():
