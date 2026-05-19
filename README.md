@@ -1,5 +1,9 @@
 # QR Code Scanner - Software Tester Portfolio
 
+[![Python](https://img.shields.io/badge/python-3.12-blue.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
+[![Tests](https://img.shields.io/badge/tests-pytest-green.svg)]()
+
 ## 📋 Project Overview
 This project demonstrates a **FastAPI** backend with a **QR code scanner** frontend.  
 It includes **Selenium + pytest** automated tests aligned with JIRA Sprint tasks (STQC-5 to STQC-9).
@@ -9,6 +13,9 @@ It includes **Selenium + pytest** automated tests aligned with JIRA Sprint tasks
 - Camera-based QR code scanning
 - SQLAlchemy database integration (SQLite for demo)
 - Automated UI tests with Selenium + pytest
+
+## API and data flow
+On each scan, the app creates a **scan** record, an **item** record, and a **token** that links them. Backend: FastAPI + SQLite (SQLAlchemy). Manual tests: Postman on `/items/`, `/scans/`, `/tokens/`. Automated tests: Selenium + pytest (STQC-5–STQC-9).
 
 ## 🧪 Test Coverage
 - STQC-5 Environment setup
@@ -36,12 +43,10 @@ pip install -r requirements.txt
    ```bash
    git clone https://github.com/yourusername/qr-scanner-portfolio.git
 
-##Virtual Enviroment
+## Virtual Enviroment
 python -m venv .venv
 source .venv/bin/activate   # Linux/Mac
 .venv\Scripts\activate      # Windows
-
-
 
 ## ▶️ Usage
 #Run the app
@@ -58,5 +63,5 @@ pytest Test/ -v
 ## 📜 License
 This project is licensed under the MIT License.
 
-##Author
+## Author
 Made by Ondina Hernandez— Software Tester Portfolio Project
