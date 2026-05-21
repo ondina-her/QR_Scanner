@@ -60,6 +60,11 @@ pytest Test/ -v
 
 - Decoded text will appear in the result box.
 
+
+# Postman Tests
+Import `qr_code_scann.postman_collection.json` into Postman to run API tests.
+
+
 ## 📜 License
 This project is licensed under the MIT License.
 
