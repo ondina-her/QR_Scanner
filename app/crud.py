@@ -1,5 +1,5 @@
 # crud.py - CRUD operations for the database
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from datetime import datetime
 from . import models, schemas
 from fastapi import HTTPException
@@ -17,9 +17,15 @@ def create_item(db: Session, item: schemas.Item):
     db.refresh(db_item)
     return db_item
 
-
-def get_items(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Item).offset(skip).limit(limit).all()
+def get_items(db: Session, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.Item)
+        .options(selectinload(models.Item.tokens).selectinload(models.Token.scan))
+        .order_by(models.Item.id.desc())   # newest first
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 # ---- Scan operations ----
 def create_scan(db: Session, scan: schemas.Scan):
@@ -40,8 +46,15 @@ def create_scan(db: Session, scan: schemas.Scan):
     db.refresh(db_scan)
     return db_scan
 
-def get_scans(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Scan).offset(skip).limit(limit).all()
+def get_scans(db: Session, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.Scan)
+        .options(selectinload(models.Scan.tokens).selectinload(models.Token.item))
+        .order_by(models.Scan.id.desc())   # newest first
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 # ---- Token operations ----
 def create_token(db: Session, token: schemas.Token):
@@ -63,5 +76,12 @@ def create_token(db: Session, token: schemas.Token):
     db.refresh(db_token)
     return db_token
 
-def get_tokens(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Token).offset(skip).limit(limit).all()
+def get_tokens(db: Session, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.Token)
+        .options(selectinload(models.Token.item), selectinload(models.Token.scan))
+        .order_by(models.Token.id.desc())  # newest first
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )

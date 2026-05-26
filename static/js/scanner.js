@@ -41,6 +41,10 @@ function setVisible(el, visible) {
 
 /** Shows a clickable link for http/https URLs; plain text otherwise. */
 function renderDecoded(decodedText) {
+  if (!decodedText) {
+    showError("No decoded text received.");
+    return;
+  }
   const text = decodedText.trim();
   setVisible(resultPlaceholder, false);
 
@@ -62,49 +66,23 @@ async function postResult(decodedText) {
   const headers = { "Content-Type": "application/json" };
 
   try {
-    // 1) Scan — record that the camera read this QR
-    const scanRes = await fetch("/scans/", {
+    const res = await fetch("/scan_and_link/", {
       method: "POST",
       headers,
       body: JSON.stringify({ text: decodedText, source: "camera" }),
     });
-    if (!scanRes.ok) {
-      const errorData = await scanRes.json().catch(() => ({}));
-      showError("Scan error: " + (errorData.detail || scanRes.status));
-      return;
-    }
-    const scan = await scanRes.json();
 
-    // 2) Item — save decoded text (same as before)
-    const itemRes = await fetch("/items/", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ name: decodedText }),
-    });
-    if (!itemRes.ok) {
-      const errorData = await itemRes.json().catch(() => ({}));
-      showError("Item error: " + (errorData.detail || itemRes.status));
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      showError("Scan+Link error: " + (errorData.detail || res.status));
       return;
     }
-    const item = await itemRes.json();
 
-    // 3) Token — link this scan to this item
-    const tokenRes = await fetch("/tokens/", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        text: decodedText,
-        source: "scanner",
-        date: new Date().toISOString().slice(0, 19),
-        item_id: item.id,
-        scan_id: scan.id,
-      }),
-    });
-    if (!tokenRes.ok) {
-      const errorData = await tokenRes.json().catch(() => ({}));
-      showError("Token error: " + (errorData.detail || tokenRes.status));
-      return;
-    }
+    const data = await res.json();
+    console.log("Scan+Item+Token created:", data);
+
+    // You can also update your UI with data.scan, data.item, data.token
+    renderDecoded(data.scan.text);
   } catch (err) {
     showError("Failed to connect to server: " + err);
   }
@@ -171,3 +149,5 @@ button.addEventListener("click", async () => {
     showError("Camera permission denied or not available.");
   }
 });
+
+
