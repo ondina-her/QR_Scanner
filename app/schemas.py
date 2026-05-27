@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 # ==========================================
@@ -41,8 +41,8 @@ class ScanCreate(BaseModel):
     Schema required when a new scan occurs.
     Receives the raw QR text and metadata, then backend links it to an Item.
     """
-    text: str    # Raw text/URL scanned from the QR code
-    source: str  # Origin of the scan event
+    text: str = Field(..., min_length=1)   # Raw text/URL scanned from the QR code
+    source: str = Field(..., min_length=1) # Origin of the scan event
     token: str | None = None  # Optional token string if present
 
 
