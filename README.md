@@ -14,10 +14,18 @@ It includes **Selenium + pytest** automated tests aligned with JIRA Sprint tasks
 - SQLAlchemy database integration (SQLite for demo)
 - Automated UI tests with Selenium + pytest
 
-## API and data flow
-On each scan, the app creates a **scan** record, an **item** record, and a **token** that links them. Backend: FastAPI + SQLite (SQLAlchemy). Manual tests: Postman on `/items/`, `/scans/`, `/tokens/`. Automated tests: Selenium + pytest (STQC-5–STQC-9).
+## Database Design
+The backend uses **two tables**:
+- **Item** → represents the decoded QR content (e.g., a link or text).
+- **Scan** → represents the scanning event (time, source, and the QR text), linked directly to an Item.
+
+👉 Each Scan points to its Item via `item_id`
+
 
 ## 🧪 Test Coverage
+
+ Manual tests: Postman on `/items/`, `/scans/`. Automated tests: Selenium + pytest (STQC-5–STQC-9).
+
 - STQC-5 Environment setup
 - STQC-6 Valid QR test
 - STQC-7 Invalid QR test
@@ -29,7 +37,7 @@ On each scan, the app creates a **scan** record, an **item** record, and a **tok
 app/           # FastAPI backend
 static/        # CSS, JS, images
 templates/     # HTML templates
-Test/          # Selenium + pytest tests
+Test/          # Selenium + pytest tests, Postman
 
 ## 📦 Requirements
 All dependencies are listed in `requirements.txt`.  
@@ -63,7 +71,7 @@ pytest Test/ -v
 # Postman Tests
 This project includes a Postman collection (`qr_code_scann.postman_collection.json`) with organized folders:
 
-- **Collection** → Main API requests for `/items/`, `/scans/`, `/tokens/`
+- **Collection** → Main API requests for `/items/`, `/scans/`
 - **Error cases** → Invalid paths and missing data (422, 404 responses)
 - **Negative cases** → Wrong relationships, empty strings, invalid inputs
 

@@ -1,6 +1,6 @@
 // scanner.js
 // Scans a QR code from the device camera using the jsQR library,
-// then /items/ the decoded text to the FastAPI backend at /items/.
+// then posts the decoded data to the FastAPI backend at /scan_and_link/.
 
 // Grab the page elements that the JS needs to interact with.
 // These IDs must match the elements in templates/index.html.
@@ -61,15 +61,36 @@ function renderDecoded(decodedText) {
   setVisible(resultLink, false);
 }
 
-// Save scan event, item, and linking token (three API calls in order).
+/** 
+ * Save scan event and item data using the unified 2-table backend structure.
+ * Automatically attempts to extract an optional token parameter if the QR is a URL.
+ */
 async function postResult(decodedText) {
   const headers = { "Content-Type": "application/json" };
+  
+  // Smart Token Extraction: 
+  // If the QR text is a URL containing a '?token=value' or '&token=value' parameter,
+  // we extract it to send it to our new optional token database field.
+  let extractedToken = null;
+  try {
+    if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+      const urlParams = new URL(decodedText).searchParams;
+      extractedToken = urlParams.get("token"); // Will be null if parameter does not exist
+    }
+  } catch (e) {
+    console.log("Not a standard URL, skipping token URL extraction.");
+  }
 
   try {
+    // Send request using the optimized ScanCreate schema format
     const res = await fetch("/scan_and_link/", {
       method: "POST",
       headers,
-      body: JSON.stringify({ text: decodedText, source: "camera" }),
+      body: JSON.stringify({ 
+        text: decodedText, 
+        source: "camera",
+        token: extractedToken // Sends the string or null seamlessly
+      }),
     });
 
     if (!res.ok) {
@@ -79,10 +100,10 @@ async function postResult(decodedText) {
     }
 
     const data = await res.json();
-    console.log("Scan+Item+Token created:", data);
+    console.log("Scan log and Item successfully synchronized:", data);
 
-    // You can also update your UI with data.scan, data.item, data.token
-    renderDecoded(data.scan.text);
+    // FIX: Render using data.item.name since scan.text no longer exists in the 2-table model
+    renderDecoded(data.item.name);
   } catch (err) {
     showError("Failed to connect to server: " + err);
   }
@@ -149,5 +170,3 @@ button.addEventListener("click", async () => {
     showError("Camera permission denied or not available.");
   }
 });
-
-
