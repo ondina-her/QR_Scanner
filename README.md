@@ -32,6 +32,18 @@ The backend uses **two tables**:
 - STQC-8 Empty request test
 - STQC-9 UI validation
 
+## 📋 Project Scope and Objectives
+See `TestCases.md` for the full scope, objectives, and detailed test cases.
+
+## 🧪 Test Cases Documentation
+A detailed test case document (STQC‑5 to STQC‑9) is included in this repository.  
+It covers:
+- Functional tests with Selenium (valid QR, invalid QR, empty QR, UI validation).
+- API tests with Postman (Items and Scans endpoints).
+- Negative cases (empty fields, invalid IDs).
+
+👉 See `TestCases.md` for the full list of test cases, objectives, steps, and expected results.
+
 
 ## 📂 Project Structure
 app/           # FastAPI backend
