@@ -75,10 +75,7 @@ class ItemWithScans(ItemBase):
 # BACKWARD COMPATIBILITY ALIASES
 # ==========================================
 
-class Item(ItemBase):
-    """Alias for basic Item operations to avoid breaking existing service references."""
-    pass
-
-class Scan(ScanBase):
-    """Alias for basic Scan operations to avoid breaking existing service references."""
-    pass
+# Backward-compatible aliases: keep names but avoid redundant subclassing
+# `Item` and `Scan` point to the same Pydantic models as `ItemBase`/`ScanBase`.
+Item = ItemBase
+Scan = ScanBase
