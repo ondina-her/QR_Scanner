@@ -7,6 +7,7 @@
 ## 📋 Project Overview
 This project demonstrates a **FastAPI** backend with a **QR code scanner** frontend.  
 It includes **Selenium + pytest** automated tests aligned with JIRA Sprint tasks (STQC-5 to STQC-9).
+Postman Collections and Apache Jmeter HTML report.
 
 ## 🚀 Features
 - FastAPI server with QR scanner page
@@ -21,6 +22,15 @@ The backend uses **two tables**:
 
 👉 Each Scan points to its Item via `item_id`
 
+## 🧪 Testing Strategy
+
+This project demonstrates **two complementary testing approaches**:
+
+- **Functional & UI Testing** → Automated with Selenium + pytest, plus Postman collections for API endpoints.  
+  Focus: Correctness of features (valid/invalid QR scans, CRUD operations, error handling).  
+
+- **Performance Testing** → Conducted with Apache JMeter.  
+  Focus: System behavior under load (response times, throughput, error rates).  
 
 ## 🧪 Test Coverage
 
@@ -33,7 +43,7 @@ The backend uses **two tables**:
 - STQC-9 UI validation
 
 ## 📋 Project Scope and Objectives
-See `TestCases.md` for the full scope, objectives, and detailed test cases.
+See `docs/test_cases.md` for the full scope, objectives, and detailed test cases.
 
 ## 🧪 Test Cases Documentation
 A detailed test case document (STQC‑5 to STQC‑9) is included in this repository.  
@@ -42,8 +52,16 @@ It covers:
 - API tests with Postman (Items and Scans endpoints).
 - Negative cases (empty fields, invalid IDs).
 
-👉 See `TestCases.md` for the full list of test cases, objectives, steps, and expected results.
+👉 See `docs/test_cases.md` for the full list of test cases, objectives, steps, and expected results.
 
+## 📊 JMeter Performance Testing Report
+
+As part of my software testing portfolio, I created a JMeter test plan to evaluate API performance under different load scenarios.  
+The report includes metrics such as response times, throughput, and error rates, presented in an interactive HTML dashboard.
+
+🔗 [View the full JMeter Performance Report](https://ondina-her.github.io/jmeter-performance-report/) 
+
+This report demonstrates my ability to design, execute, and present performance tests in a professional format.
 
 ## 📂 Project Structure
 app/           # FastAPI backend
@@ -61,27 +79,38 @@ pip install -r requirements.txt
 ## ⚙️ Setup
 1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/qr-scanner-portfolio.git
-
-## Virtual Enviroment
-python -m venv .venv
-source .venv/bin/activate   # Linux/Mac
-.venv\Scripts\activate      # Windows
+   git clone https://github.com/ondina-her/QR_Scanner.git
+   ```
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv .venv
+   ```
+   - Linux/Mac:
+     ```bash
+     source .venv/bin/activate
+     ```
+   - Windows:
+     ```powershell
+     .venv\Scripts\activate
+     ```
 
 ## ▶️ Usage
-#Run the app
+Run the app:
+```bash
 uvicorn app.app:app --reload
+```
 
-#Run test
+Run tests:
+```bash
 pytest Test/ -v
+```
+
 - Open http://localhost:8000 in your browser.
-
 - Click Start Scanner and show a QR code to your camera.
-
 - Decoded text will appear in the result box.
 
 # Postman Tests
-This project includes a Postman collection (`qr_code_scann.postman_collection.json`) with organized folders:
+This project includes a Postman collection (`Test/postman/qr_code_scann.postman_collection.json`) with organized folders:
 
 - **Collection** → Main API requests for `/items/`, `/scans/`
 - **Error cases** → Invalid paths and missing data (422, 404 responses)
