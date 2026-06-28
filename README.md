@@ -115,6 +115,10 @@ This project includes a Postman collection (`Test/postman/qr_code_scann.postman_
 - **Collection** → Main API requests for `/items/`, `/scans/`
 - **Error cases** → Invalid paths and missing data (422, 404 responses)
 - **Negative cases** → Wrong relationships, empty strings, invalid inputs
+- **Update & Delete** → Full CRUD coverage with positive and negative tests:
+  - `PUT /items/{id}` → Update item name/description
+  - `DELETE /items/{id}` → Remove item and linked scans
+  - `DELETE /scans/{id}` → Remove individual scan events
 
 ### How to use
 1. Open Postman.
