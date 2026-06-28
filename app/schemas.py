@@ -18,6 +18,18 @@ class Item(BaseModel):
         from_attributes = True
 
 
+class ItemUpdate(BaseModel):
+    """
+    Schema for partial Item updates.
+    Fields are optional so clients can update only the data they want to change.
+    """
+    name: str | None = None
+    description: str | None = None
+
+    class Config:
+        from_attributes = True
+
+
 class Scan(BaseModel):
     """
     Base schema for a Scan event.
