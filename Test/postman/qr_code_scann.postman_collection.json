@@ -437,7 +437,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Empty string should be rejected\", function () {\r",
+                  "pm.test(\"Invalid scan input should be rejected\", function () {\r",
                   "    pm.response.to.have.status(422);\r",
                   "});"
                 ],
@@ -455,7 +455,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"text\": \"\",\r\n  \"source\": \"camera\"\r\n}"
+              "raw": "{\r\n  \"text\": \"\",\r\n  \"source\": \"camera\"\r\n}\r\n"
             },
             "url": {
               "raw": "http://127.0.0.1:8000/scans/",
@@ -570,6 +570,63 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "Update and delete",
+      "item": [
+        {
+          "name": "Update item possitive case",
+          "item": [
+            {
+              "name": "Put http://127.0.0.1:8000/items/1",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Update item negative case",
+          "item": [
+            {
+              "name": "Put http://127.0.0.1:8000/items/999900",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete item positive case",
+          "item": [
+            {
+              "name": "Delete",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete item negative case",
+          "item": [
+            {
+              "name": "Delete",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
