@@ -31,8 +31,5 @@
 ## 8. Impact
 - Explain the effect on the user or system.
 
-## 9. Suggested Fix
-- Optional: suggest a possible solution.
-
-## 10. Status
+## 9. Status
 - **Open / In Progress / Resolved / Closed**
