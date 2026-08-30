@@ -101,6 +101,41 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Item entity not found")
     return db_item
 
+#Update item
+@router.put("/items/{item_id}", status_code=200, response_model=schemas.Item)
+def update_item(item_id: int, item_update: schemas.ItemUpdate, db: Session = Depends(get_db)):
+    """
+    Updates an existing unique Item's name and/or description.
+    Only supplied fields are changed; omitted fields remain untouched.
+    """
+    update_data = item_update.model_dump(exclude_unset=True)
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No update fields provided")
+
+    updated_item = crud.update_item(
+        db=db,
+        item_id=item_id,
+        new_name=update_data.get("name", crud.UNSET),
+        new_description=update_data.get("description", crud.UNSET)
+    )
+    if not updated_item:
+        raise HTTPException(status_code=404, detail="Item entity not found for update")
+    return updated_item
+
+#Delete item
+@router.delete("/items/{item_id}", status_code=204)
+def delete_item(item_id: int, db: Session = Depends(get_db)):
+    """
+    Deletes a specific unique Item and all its associated scan events.
+    Returns 204 No Content if deletion was successful, or 404 if not found.
+    """
+    success = crud.delete_item(db=db, item_id=item_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Item entity not found for deletion")
+    return None
+
+#===================================================
+# SCAN READ & DELETE ENDPOINTS
 
 @router.get("/scans/{scan_id}", status_code=200, response_model=schemas.ScanWithItem)
 def read_scan(scan_id: int, db: Session = Depends(get_db)):
@@ -127,3 +162,15 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def read_scans(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """Retrieves a paginated timeline list of all individual physical scan events."""
     return crud.get_scans(db=db, skip=skip, limit=limit)
+
+#Delete scan
+@router.delete("/scans/{scan_id}", status_code=204)
+def delete_scan(scan_id: int, db: Session = Depends(get_db)):
+    """
+    Deletes a specific scan event from the database.
+    Returns 204 No Content if deletion was successful, or 404 if not found.
+    """
+    success = crud.delete_scan(db=db, scan_id=scan_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Scan record not found")
+    return None
