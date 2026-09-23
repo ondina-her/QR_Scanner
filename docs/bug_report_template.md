@@ -1,35 +1,40 @@
 # Bug Report Template
 
-## 1. Bug Summary
+## Bug Summary
 - **Title:**
 - **Date:**
 - **Reporter:**
-- **Environment:**
 
-## 2. Severity and Priority
+## Environment:
+- **OS:** 
+- **Hardware/Camera:** 
+- **Lightning:**  
+- **Target media:**
+
+## Severity and Priority
 - **Severity:**
 - **Priority:**
 
-## 3. Description
+## Description
 - Briefly describe the issue.
 
-## 4. Steps to Reproduce
+## Steps to Reproduce
 1. Open the application.
 2. Navigate to the relevant page or feature.
 3. Perform the action that triggers the issue.
 4. Observe the unexpected result.
 
-## 5. Expected Result
+## Expected Result
 - Describe what should happen.
 
-## 6. Actual Result
+## Actual Result
 - Describe what actually happens.
 
-## 7. Evidence
+## Evidence
 - Attach screenshots, videos, logs, or console output.
 
-## 8. Impact
+## Impact
 - Explain the effect on the user or system.
 
-## 9. Status
+## Status
 - **Open / In Progress / Resolved / Closed**

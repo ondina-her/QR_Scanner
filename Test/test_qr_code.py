@@ -149,3 +149,4 @@ def test_ui_validation():
     assert status_box is not None
 
     driver.quit()
+
