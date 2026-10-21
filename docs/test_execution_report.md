@@ -18,6 +18,14 @@ This report summarizes the test execution performed for the QR scanner applicati
 - Tools: Selenium, pytest, Postman, JMeter
 - Database: SQLite
 
+## Latest Pytest Execution
+- Date: 2026-10-21
+
+| Run | Command | Scope | Result |
+|---|---|---|---|
+| Automated UI | `python -m pytest` | UI validation selected; 3 manual tests deselected | Pass: 1; deselected: 3; 26.68 seconds |
+| Manual camera | `python -m pytest -s -m manual` | Valid QR, unreadable input, and empty input selected; UI test deselected | Pass: 3; deselected: 1; 84.20 seconds |
+
 ## Test Cases Executed
 
 | Test Case | Type | Status | Evidence / Notes |
